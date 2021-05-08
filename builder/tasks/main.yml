@@ -1,0 +1,36 @@
+---
+# tasks file for builder
+- name: Copy key.json
+  copy:
+    src: key.json
+    dest: /home/ubuntu/key.json
+
+- name: Ensure git is install
+  apt:
+    update_cache: yes 
+    name: git
+    state: present 
+
+- name: Ensure Github-repo is clone  
+  git:
+    repo: "{{ my_repo }}"
+    dest: "{{ build_dir }}"
+    clone: yes
+
+- name: Ensure in DockerHub is login
+  shell: cat "{{ ya_cr_password }}" | docker login \
+          --username "{{ ya_cr_username }}" \
+          --password-stdin \
+          "{{ yandex_registry }}"
+    
+- name: Ensure Docker image is build
+  docker_image:
+    name: "{{ yandex_registry }}/{{ reg_id }}/caucuscalculator"
+    build:
+      path: "{{ build_dir }}/multistage"
+    tag: latest
+    push: yes
+    source: build
+  
+  notify:
+    - DockerHub logout
