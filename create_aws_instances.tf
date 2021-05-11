@@ -27,7 +27,7 @@ data "aws_subnet_ids" "my_subnet_ids" {
 
 resource "aws_key_pair" "my_generated_key" {
   key_name   = "sertKey"
-  public_key = "${file(.sertKey.pub)}"
+  public_key = "${file(sertKey.pub)}"
 }
 
 resource "aws_security_group" "my_sec_group" {
