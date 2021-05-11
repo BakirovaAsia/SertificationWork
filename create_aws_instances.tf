@@ -16,14 +16,12 @@ provider "aws" {
 resource "aws_instance" "build-vm" {
   ami           = "ami-00399ec92321828f5" # us-east-2
   instance_type = "t2.micro"
-  //associate_public_ip_address = true
+  associate_public_ip_address = true
+    
+  subnet_id = [aws_subnet.my_subnet.id]
   vpc_security_group_ids = [aws_security_group.my_sec_group.id]
 
-  network_interface {
-    network_interface_id = aws_network_interface.my_net_int.id
-    device_index         = 0
-  }
-
+  
   tags = {
     Name = "build-vm"
   }
@@ -47,14 +45,6 @@ resource "aws_subnet" "my_subnet" {
   }
 }
 
-resource "aws_network_interface" "my_net_int" {
-  subnet_id   = aws_subnet.my_subnet.id
-
-
-  tags = {
-    Name = "tf-network_interface"
-  }
-}
 
 resource "aws_security_group" "my_sec_group" {
   name        = "my_sec_group"
@@ -66,7 +56,7 @@ resource "aws_security_group" "my_sec_group" {
     from_port        = 8080
     to_port          = 8080
     protocol         = "tcp"
-    cidr_blocks      = [aws_vpc.my_vpc.cidr_block]
+    cidr_blocks      = ["0.0.0.0/0"]
     
   }
   ingress {
@@ -74,7 +64,7 @@ resource "aws_security_group" "my_sec_group" {
     from_port        = 22
     to_port          = 22
     protocol         = "tcp"
-    cidr_blocks      = [aws_vpc.my_vpc.cidr_block]
+    cidr_blocks      = ["0.0.0.0/0"]
     
   }
 
