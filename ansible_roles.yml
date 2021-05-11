@@ -31,6 +31,7 @@
       add_host:
         hostname: "{{ deploy_vm_ip }}"
         groupname: deploy_host
+        ansible_ssh_private_key_file: ./keys/{{ key_inst }}.pem
         ansible_ssh_user: ubuntu
  
 
