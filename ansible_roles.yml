@@ -37,6 +37,7 @@
 
 - name: Build-server configuration
   hosts: build_host
+  remote_user: ubuntu
   become: yes
 
   roles:
