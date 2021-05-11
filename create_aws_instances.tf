@@ -20,7 +20,7 @@ resource "aws_instance" "build-vm" {
   security_groups = [aws_security_group.my_sec_group]
 
   network_interface {
-    network_interface_id = aws_network_interface.foo.id
+    network_interface_id = aws_network_interface.my_net_int.id
     device_index         = 0
   }
 
@@ -93,11 +93,11 @@ resource "aws_security_group" "my_sec_group" {
 
 
 output "public_ip_vm_1" {
-  value = yandex_compute_instance.vm-1.public_ip
+  value = aws_instance.build-vm.public_ip
 }
 
 output "public_ip_vm_2" {
-  value = yandex_compute_instance.vm-2.public_ip
+  value = aws_instance.build-vm.public_ip
 }
 /*
 resource "null_resource" "ansible" {
