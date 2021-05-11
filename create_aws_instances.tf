@@ -27,6 +27,16 @@ resource "aws_instance" "build-vm" {
   }
 }
 
+data "aws_vpc" "my_vpc" {
+  default = true
+}
+
+data "aws_subnet_ids" "my_subnet_ids" {
+  vpc_id = aws_vpc.my_vpc.id
+}
+
+
+/*
 resource "aws_vpc" "my_vpc" {
   cidr_block = "192.168.10.0/24"
 
@@ -34,12 +44,6 @@ resource "aws_vpc" "my_vpc" {
     Name = "tf-vpc"
   }
 }
-
-data "aws_subnet_ids" "my_subnet_ids" {
-  vpc_id = aws_vpc.my_vpc.id
-}
-
-/*
 resource "aws_subnet" "my_subnet" {
   vpc_id            = aws_vpc.my_vpc.id
   cidr_block        = "192.168.10.0/24"
