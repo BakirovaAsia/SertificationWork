@@ -13,20 +13,6 @@ provider "aws" {
 
 }
 
-resource "aws_instance" "build-vm" {
-  ami           = "ami-00399ec92321828f5" # us-east-2
-  instance_type = "t2.micro"
-  associate_public_ip_address = true
-    
-  subnet_id = tolist(data.aws_subnet_ids.my_subnet_ids.ids)[0]
-  vpc_security_group_ids = [aws_security_group.my_sec_group.id]
-
-  
-  tags = {
-    Name = "build-vm"
-  }
-}
-
 data "aws_vpc" "my_vpc" {
   default = true
 }
@@ -34,26 +20,6 @@ data "aws_vpc" "my_vpc" {
 data "aws_subnet_ids" "my_subnet_ids" {
   vpc_id = data.aws_vpc.my_vpc.id
 }
-
-
-/*
-resource "aws_vpc" "my_vpc" {
-  cidr_block = "192.168.10.0/24"
-
-  tags = {
-    Name = "tf-vpc"
-  }
-}
-resource "aws_subnet" "my_subnet" {
-  vpc_id            = aws_vpc.my_vpc.id
-  cidr_block        = "192.168.10.0/24"
-  availability_zone = "us-east-2a"
-
-  tags = {
-    Name = "tf-subnet"
-  }
-}
-*/
 
 resource "aws_security_group" "my_sec_group" {
   name        = "my_sec_group"
@@ -90,14 +56,40 @@ resource "aws_security_group" "my_sec_group" {
   }
 }
 
+resource "aws_instance" "build-vm" {
+  ami           = "ami-00399ec92321828f5" # us-east-2
+  instance_type = "t2.micro"
+  associate_public_ip_address = true
+    
+  subnet_id = tolist(data.aws_subnet_ids.my_subnet_ids.ids)[0]
+  vpc_security_group_ids = [aws_security_group.my_sec_group.id]
+  
+  tags = {
+    Name = "build-vm"
+  }
+}
 
-output "public_ip_vm_1" {
+resource "aws_instance" "deploy-vm" {
+  ami           = "ami-00399ec92321828f5" # us-east-2
+  instance_type = "t2.micro"
+  associate_public_ip_address = true
+    
+  subnet_id = tolist(data.aws_subnet_ids.my_subnet_ids.ids)[0]
+  vpc_security_group_ids = [aws_security_group.my_sec_group.id]
+ 
+  tags = {
+    Name = "deploy-vm"
+  }
+}
+
+output "public_ip_build" {
   value = aws_instance.build-vm.public_ip
 }
 
-output "public_ip_vm_2" {
-  value = aws_instance.build-vm.public_ip
+output "public_ip_deploy" {
+  value = aws_instance.deploy-vm.public_ip
 }
+
 /*
 resource "null_resource" "ansible" {
 
