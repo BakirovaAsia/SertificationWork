@@ -18,7 +18,7 @@ resource "aws_instance" "build-vm" {
   instance_type = "t2.micro"
   associate_public_ip_address = true
     
-  //subnet_id = [aws_subnet.my_subnet.id]
+  subnet_id = tolist(data.aws_subnet_ids.my_subnet_ids)[0]
   vpc_security_group_ids = [aws_security_group.my_sec_group.id]
 
   
@@ -35,6 +35,11 @@ resource "aws_vpc" "my_vpc" {
   }
 }
 
+data "aws_subnet_ids" "my_subnet_ids" {
+  vpc_id = aws_vpc.my_vpc.id
+}
+
+/*
 resource "aws_subnet" "my_subnet" {
   vpc_id            = aws_vpc.my_vpc.id
   cidr_block        = "192.168.10.0/24"
@@ -44,7 +49,7 @@ resource "aws_subnet" "my_subnet" {
     Name = "tf-subnet"
   }
 }
-
+*/
 
 resource "aws_security_group" "my_sec_group" {
   name        = "my_sec_group"
