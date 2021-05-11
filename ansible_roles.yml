@@ -3,7 +3,7 @@
   hosts: localhost
   vars:
     region: us-east-2
-    key_inst: InstanceKey
+    key_inst: sertKey
     build_vm_ip: 0.0.0.0
     deploy_vm_ip: 0.0.0.0
   tasks:
