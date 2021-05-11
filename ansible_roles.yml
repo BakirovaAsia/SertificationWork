@@ -1,19 +1,38 @@
 ---
-- name: Adding hosts
+- name: Config instances 
   hosts: localhost
+  vars:
+    region: us-east-2
+    key_inst: InstanceKey
+    build-vm_ip: 0.0.0.0
+    deploy-vm_ip: 0.0.0.0
   tasks:
-    - name: Add building vm to host group
-      add_host:
-        hostname: "{{ vm1_public_ip }}"
-        groupname: build_host
-        ansible_ssh_user: ubuntu
+    - name: Create a new EC2 key pair for Staging and Production environments
+      ec2_key:
+        name: "{{ key_inst }}"
+        region: "{{ region }}"
+      register: ec2_key
 
-    - name: Add building vm to host group
+    - name: Save private key
+      copy:
+        content: "{{ ec2_key.key.private_key }}"
+        dest: "./keys/{{ key_inst }}.pem"
+        mode: 0600
+      when: ec2_key.changed
+
+    - name: Add build-instance to host group
       add_host:
-        hostname: "{{ vm2_public_ip }}"
-        groupname: deploy_host
-        ansible_ssh_user: ubuntu      
+        hostname: "{{ build-vm_ip }}"
+        groupname: build_host
+        ansible_ssh_private_key_file: ./keys/{{ key_inst }}.pem
+        ansible_ssh_user: ubuntu
     
+    - name: Add deploying vm to host group
+      add_host:
+        hostname: "{{ deploy-vm_ip }}"
+        groupname: deploy_host
+        ansible_ssh_user: ubuntu
+ 
 
 - name: Build-server configuration
   hosts: build_host
