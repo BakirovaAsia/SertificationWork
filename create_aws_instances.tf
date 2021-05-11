@@ -32,7 +32,7 @@ data "aws_vpc" "my_vpc" {
 }
 
 data "aws_subnet_ids" "my_subnet_ids" {
-  vpc_id = aws_vpc.my_vpc.id
+  vpc_id = data.aws_vpc.my_vpc.id
 }
 
 
@@ -58,7 +58,7 @@ resource "aws_subnet" "my_subnet" {
 resource "aws_security_group" "my_sec_group" {
   name        = "my_sec_group"
 
-  vpc_id      = aws_vpc.my_vpc.id
+  vpc_id      = data.aws_vpc.my_vpc.id
 
   ingress {
     description      = "for tomcat"
