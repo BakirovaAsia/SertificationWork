@@ -17,7 +17,7 @@ resource "aws_instance" "build-vm" {
   ami           = "ami-00399ec92321828f5" # us-east-2
   instance_type = "t2.micro"
   associate_public_ip_address = true
-  security_groups = [aws_security_group.my_sec_group]
+  vpc_security_group_ids = [aws_security_group.my_sec_group.id]
 
   network_interface {
     network_interface_id = aws_network_interface.my_net_int.id
