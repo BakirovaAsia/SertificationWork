@@ -40,7 +40,7 @@ resource "aws_vpc" "my_vpc" {
 resource "aws_subnet" "my_subnet" {
   vpc_id            = aws_vpc.my_vpc.id
   cidr_block        = "192.168.10.0/24"
-  availability_zone = "us-east-2"
+  availability_zone = "us-east-2a"
 
   tags = {
     Name = "tf-subnet"
