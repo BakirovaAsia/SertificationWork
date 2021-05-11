@@ -9,7 +9,7 @@ terraform {
 }
 
 //ssh-keygen -t rsa -b 2048 -N "" -f ~/.ssh/sertKey.pem
-//ssh-keygen -y -f ~/.ssh/sertKey.pem >> ./keys/sertKey.pub
+//ssh-keygen -y -f ~/.ssh/sertKey.pem >> sertKey.pub
 
 provider "aws" {
   # Configuration options
@@ -27,7 +27,7 @@ data "aws_subnet_ids" "my_subnet_ids" {
 
 resource "aws_key_pair" "my_generated_key" {
   key_name   = "sertKey"
-  public_key = "${file(./keys/sertKey.pub)}"
+  public_key = "${file(.sertKey.pub)}"
 }
 
 resource "aws_security_group" "my_sec_group" {
