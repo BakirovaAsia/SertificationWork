@@ -4,8 +4,8 @@
   vars:
     region: us-east-2
     key_inst: InstanceKey
-    build-vm_ip: 0.0.0.0
-    deploy-vm_ip: 0.0.0.0
+    build_vm_ip: 0.0.0.0
+    deploy_vm_ip: 0.0.0.0
   tasks:
     - name: Create a new EC2 key pair for Staging and Production environments
       ec2_key:
@@ -22,14 +22,14 @@
 
     - name: Add build-instance to host group
       add_host:
-        hostname: "{{ build-vm_ip }}"
+        hostname: "{{ build_vm_ip }}"
         groupname: build_host
         ansible_ssh_private_key_file: ./keys/{{ key_inst }}.pem
         ansible_ssh_user: ubuntu
     
     - name: Add deploying vm to host group
       add_host:
-        hostname: "{{ deploy-vm_ip }}"
+        hostname: "{{ deploy_vm_ip }}"
         groupname: deploy_host
         ansible_ssh_user: ubuntu
  
