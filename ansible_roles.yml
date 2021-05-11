@@ -20,14 +20,14 @@
         mode: 0600
       when: ec2_key.changed
 
-    - name: Add build-instance to host group
+    - name: Add build instance to host group
       add_host:
         hostname: "{{ build_vm_ip }}"
         groupname: build_host
         ansible_ssh_private_key_file: ./keys/{{ key_inst }}.pem
         ansible_ssh_user: ubuntu
     
-    - name: Add deploying vm to host group
+    - name: Add deploy instance to host group
       add_host:
         hostname: "{{ deploy_vm_ip }}"
         groupname: deploy_host

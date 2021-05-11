@@ -48,7 +48,6 @@ resource "aws_security_group" "my_sec_group" {
     to_port          = 0
     protocol         = "-1"
     cidr_blocks      = ["0.0.0.0/0"]
-    ipv6_cidr_blocks = ["::/0"]
   }
 
   tags = {
@@ -60,7 +59,7 @@ resource "aws_instance" "build-vm" {
   ami           = "ami-00399ec92321828f5" # us-east-2
   instance_type = "t2.micro"
   associate_public_ip_address = true
-    
+  key_name = sertKey  
   subnet_id = tolist(data.aws_subnet_ids.my_subnet_ids.ids)[0]
   vpc_security_group_ids = [aws_security_group.my_sec_group.id]
   
