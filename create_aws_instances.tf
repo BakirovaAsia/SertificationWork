@@ -18,7 +18,7 @@ resource "aws_instance" "build-vm" {
   instance_type = "t2.micro"
   associate_public_ip_address = true
     
-  subnet_ids = [aws_subnet.my_subnet.id]
+  subnet_id = [aws_subnet.my_subnet.id]
   vpc_security_group_ids = [aws_security_group.my_sec_group.id]
 
   
