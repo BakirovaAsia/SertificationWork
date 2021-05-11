@@ -98,7 +98,7 @@ output "public_ip_vm_1" {
 
 output "public_ip_vm_2" {
   value = yandex_compute_instance.vm-2.public_ip
-
+}
 /*
 resource "null_resource" "ansible" {
 
