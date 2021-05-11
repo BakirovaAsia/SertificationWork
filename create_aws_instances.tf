@@ -1,118 +1,105 @@
 terraform {
   required_providers {
-    yandex = {
-      source = "yandex-cloud/yandex"
+    aws = {
+      source = "hashicorp/aws"
+      version = "3.39.0"
     }
   }
 }
 
-provider "yandex" {
-  token     = "AgAAAABRl1XhAATuwYX5S9lFNkmml4SmcfTlwh8"
-  cloud_id  = "b1gaukp5b6t786s5v82q"
-  folder_id = "b1g8vakc2uotg05v3orc"
-  zone      = "ru-central1-c"
+provider "aws" {
+  # Configuration options
+    region = "us-east-2"
+
 }
 
-resource "yandex_compute_instance" "vm-1" {
-  name = "build-vm"
-
-  resources {
-    cores  = 2
-    memory = 2
-  }
-
-  boot_disk {
-    initialize_params {
-      image_id = "fd81d2d9ifd50gmvc03g"
-      size = 5 
-    }
-  }
+resource "aws_instance" "build-vm" {
+  ami           = "ami-00399ec92321828f5" # us-east-2
+  instance_type = "t2.micro"
+  associate_public_ip_address = true
+  security_groups = [aws_security_group.my_sec_group]
 
   network_interface {
-    subnet_id = yandex_vpc_subnet.subnet-1.id
-    nat       = true
+    network_interface_id = aws_network_interface.foo.id
+    device_index         = 0
   }
 
-  metadata = {
-    ssh-keys = "ubuntu:${file("~/.ssh/id_rsa.pub")}"
+  tags = {
+    Name = "build-vm"
+  }
+}
+
+resource "aws_vpc" "my_vpc" {
+  cidr_block = "192.168.10.0/24"
+
+  tags = {
+    Name = "tf-vpc"
+  }
+}
+
+resource "aws_subnet" "my_subnet" {
+  vpc_id            = aws_vpc.my_vpc.id
+  cidr_block        = "192.168.10.0/24"
+  availability_zone = "us-east-2"
+
+  tags = {
+    Name = "tf-subnet"
+  }
+}
+
+resource "aws_network_interface" "my_net_int" {
+  subnet_id   = aws_subnet.my_subnet.id
+
+
+  tags = {
+    Name = "tf-network_interface"
+  }
+}
+
+resource "aws_security_group" "my_sec_group" {
+  name        = "my_sec_group"
+
+  vpc_id      = aws_vpc.my_vpc.id
+
+  ingress {
+    description      = "for tomcat"
+    from_port        = 8080
+    to_port          = 8080
+    protocol         = "tcp"
+    cidr_blocks      = [aws_vpc.my_vpc.cidr_block]
+    
+  }
+  ingress {
+    description      = "for ssh"
+    from_port        = 22
+    to_port          = 22
+    protocol         = "tcp"
+    cidr_blocks      = [aws_vpc.my_vpc.cidr_block]
+    
   }
 
-}
-
-resource "yandex_compute_instance" "vm-2" {
-  name = "deploy-vm"
-
-  resources {
-    cores  = 2
-    memory = 2
+  egress {
+    from_port        = 0
+    to_port          = 0
+    protocol         = "-1"
+    cidr_blocks      = ["0.0.0.0/0"]
+    ipv6_cidr_blocks = ["::/0"]
   }
 
-  boot_disk {
-    initialize_params {
-      image_id = "fd81d2d9ifd50gmvc03g"
-      size = 5 
-    }
+  tags = {
+    Name = "tf-security_group"
   }
-
-  network_interface {
-    subnet_id = yandex_vpc_subnet.subnet-1.id
-    nat       = true
-  }
-
-  metadata = {
-    ssh-keys = "ubuntu:${file("~/.ssh/id_rsa.pub")}"
-  }
-
 }
 
-resource "yandex_vpc_network" "network-1" {
-  name = "network1"
+
+output "public_ip_vm_1" {
+  value = yandex_compute_instance.vm-1.public_ip
 }
 
-resource "yandex_vpc_subnet" "subnet-1" {
-  name           = "subnet1"
-  zone           = "ru-central1-c"
-  network_id     = yandex_vpc_network.network-1.id
-  v4_cidr_blocks = ["192.168.10.0/24"]
-}
+output "public_ip_vm_2" {
+  value = yandex_compute_instance.vm-2.public_ip
 
-resource yandex_container_registry "my-registry" {
-  folder_id = "b1g8vakc2uotg05v3orc"
-  name      = "docker-registry"
-}
-
-resource "yandex_container_registry_iam_binding" "puller" {
-  registry_id  = yandex_container_registry.my-registry.id
-  role        = "container-registry.images.puller"
-
-  members = [
-    "system:allUsers",
-  ]
-}
-
-resource "yandex_container_registry_iam_binding" "pusher" {
-  registry_id  = yandex_container_registry.my-registry.id
-  role        = "container-registry.images.pusher"
-
-  members = [
-    "serviceAccount:${yandex_iam_service_account.sa.id}",
-  ]
-}
-
-resource "yandex_iam_service_account" "sa" {
-  name        = "vmmanager"
-  description = "service account to manage VMs"
-  folder_id = "b1g8vakc2uotg05v3orc"
-}
-
-output "internal_ip_address_vm_1" {
-  value = yandex_compute_instance.vm-1.network_interface.0.nat_ip_address
-}
-
-output "internal_ip_address_vm_2" {
-  value = yandex_compute_instance.vm-2.network_interface.0.nat_ip_address
-}
-
+/*
 resource "null_resource" "ansible" {
 
   provisioner "local-exec" {
@@ -126,5 +113,5 @@ resource "null_resource" "ansible" {
     EOT
   }
 }
-
+*/
 
