@@ -4,17 +4,33 @@ terraform {
       source = "hashicorp/aws"
       version = "3.39.0"
     }
-    
+    tls = {
+      source = "hashicorp/tls"
+      version = "3.1.0"
+    }
   }
 }
 
 //ssh-keygen -t rsa -b 2048 -N "" -f ~/.ssh/sertKey.pem
 //ssh-keygen -y -f ~/.ssh/sertKey.pem >> sertKey.pub
 
+resource "tls_private_key" "my_private_key" {
+  algorithm = "RSA"
+  rsa_bits  = 4096
+
+  provisioner "local-exec" {
+    command = "echo '${tls_private_key.my_private_key.private_key_pem}' > ./keys/sertKey.pem"
+  }
+}
+
+resource "aws_key_pair" "my_generated_key" {
+  key_name   = "sertKey"
+  public_key = "[tls_private_key.my_private_key.public_key_openssh]"
+}
+
 provider "aws" {
   # Configuration options
     region = "us-east-2"
-
 }
 
 data "aws_vpc" "my_vpc" {
@@ -23,11 +39,6 @@ data "aws_vpc" "my_vpc" {
 
 data "aws_subnet_ids" "my_subnet_ids" {
   vpc_id = data.aws_vpc.my_vpc.id
-}
-
-resource "aws_key_pair" "my_generated_key" {
-  key_name   = "sertKey"
-  public_key = "file(sertKey.pub)"
 }
 
 resource "aws_security_group" "my_sec_group" {
@@ -68,7 +79,7 @@ resource "aws_instance" "build-vm" {
   ami           = "ami-00399ec92321828f5" # us-east-2
   instance_type = "t2.micro"
   associate_public_ip_address = true
-  key_name = "sertKey"
+  key_name = [tls_private_key.my_private_key.key_name]
   subnet_id = tolist(data.aws_subnet_ids.my_subnet_ids.ids)[0]
   vpc_security_group_ids = [aws_security_group.my_sec_group.id]
   

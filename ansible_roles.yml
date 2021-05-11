@@ -7,19 +7,6 @@
     build_vm_ip: 0.0.0.0
     deploy_vm_ip: 0.0.0.0
   tasks:
-    - name: Create a new EC2 key pair for Staging and Production environments
-      ec2_key:
-        name: "{{ key_inst }}"
-        region: "{{ region }}"
-      register: ec2_key
-
-    - name: Save private key
-      copy:
-        content: "{{ ec2_key.key.private_key }}"
-        dest: "./keys/{{ key_inst }}.pem"
-        mode: 0600
-      when: ec2_key.changed
-
     - name: Add build instance to host group
       add_host:
         hostname: "{{ build_vm_ip }}"
