@@ -16,7 +16,7 @@ provider "aws" {
 resource "aws_instance" "build-vm" {
   ami           = "ami-00399ec92321828f5" # us-east-2
   instance_type = "t2.micro"
-  associate_public_ip_address = true
+  //associate_public_ip_address = true
   vpc_security_group_ids = [aws_security_group.my_sec_group.id]
 
   network_interface {
