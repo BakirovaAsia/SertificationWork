@@ -4,8 +4,12 @@ terraform {
       source = "hashicorp/aws"
       version = "3.39.0"
     }
+    
   }
 }
+
+//ssh-keygen -t rsa -b 2048 -N "" -f ~/.ssh/sertKey.pem
+//ssh-keygen -y -f ~/.ssh/sertKey.pem >> ./keys/sertKey.pub
 
 provider "aws" {
   # Configuration options
@@ -19,6 +23,11 @@ data "aws_vpc" "my_vpc" {
 
 data "aws_subnet_ids" "my_subnet_ids" {
   vpc_id = data.aws_vpc.my_vpc.id
+}
+
+resource "aws_key_pair" "my_generated_key" {
+  key_name   = "sertKey"
+  public_key = "${file(./keys/sertKey.pub)}"
 }
 
 resource "aws_security_group" "my_sec_group" {
@@ -59,7 +68,7 @@ resource "aws_instance" "build-vm" {
   ami           = "ami-00399ec92321828f5" # us-east-2
   instance_type = "t2.micro"
   associate_public_ip_address = true
-  key_name = sertKey  
+  key_name = [aws_key_pair.my_generated_key.key_name]  
   subnet_id = tolist(data.aws_subnet_ids.my_subnet_ids.ids)[0]
   vpc_security_group_ids = [aws_security_group.my_sec_group.id]
   
