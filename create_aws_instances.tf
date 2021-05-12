@@ -25,7 +25,7 @@ resource "tls_private_key" "my_private_key" {
 
 resource "aws_key_pair" "my_generated_key" {
   key_name   = "sertKey"
-  public_key = "[tls_private_key.my_private_key.public_key_openssh]"
+  public_key = "${tls_private_key.my_private_key.public_key_openssh}"
 }
 
 provider "aws" {
