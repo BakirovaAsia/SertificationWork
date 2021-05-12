@@ -2,3 +2,5 @@
 # vars file for builder
 my_repo: https://github.com/BakirovaAsia/Homework7.git
 build_dir: /tmp
+DockerHub_user: wil_be_changed
+DockerHub_pass: wil_be_changed

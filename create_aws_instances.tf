@@ -120,19 +120,19 @@ output "public_ip_deploy" {
   value = aws_instance.deploy-vm.public_ip
 }
 
+//terraform output public_ip_build
+// terraform output public_ip_deploy
 /*
 resource "null_resource" "ansible" {
 
   provisioner "local-exec" {
     command = <<EOT
-     yc iam key create --service-account-name vmmanager -o key.json    
-     ansible-playbook ya_roles.yml \
-              --extra-vars \
-                  "vm1_public_ip=${yandex_compute_instance.vm-1.network_interface.0.nat_ip_address} \
-                   vm2_public_ip=${yandex_compute_instance.vm-2.network_interface.0.nat_ip_address} \
-                  reg_id=${yandex_container_registry.my-registry.id}"
+              ansible-playbook ansible_roles.yml \
+              --extra-vars "build_vm_ip=${aws_instance.build-vm.public_ip} \
+                            deploy_vm_ip=${aws_instance.deploy-vm.public_ip}\
+                            DockerHub_user= \
+                            DockerHub_pass= "
     EOT
   }
 }
 */
-
