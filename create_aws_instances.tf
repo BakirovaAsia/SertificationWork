@@ -87,9 +87,9 @@ resource "aws_instance" "build-vm" {
     Name = "build-vm"
   }
 
-  depends_on = {
+  depends_on = [
     aws_key_pair.my_generated_key,
-  }
+  ]
 }
 
 resource "aws_instance" "deploy-vm" {
@@ -104,9 +104,9 @@ resource "aws_instance" "deploy-vm" {
     Name = "deploy-vm"
   }
 
-  depends_on = {
+  depends_on = [
     aws_key_pair.my_generated_key,
-  }
+  ]
 }
 
 output "public_ip_build" {
