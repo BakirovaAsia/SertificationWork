@@ -1,4 +1,4 @@
-FROM ubuntu:latest as pack
+FROM ubuntu:latest as builder
 
 RUN apt-get update \
     && apt-get install maven -y \
@@ -13,7 +13,7 @@ WORKDIR /usr/local/war
 
 RUN cp -r /usr/local/CaucusCalculator/target/*.war /usr/local/war/CaucusCalc.war
 
-FROM openjdk:8-jre-alpine
+FROM openjdk:8-jre-alpine as deployer
 RUN apk add --no-cache wget
 
 WORKDIR /usr/local/tomcat
@@ -26,7 +26,7 @@ RUN wget https://mirrors.nav.ro/apache/tomcat/tomcat-8/v8.5.65/bin/apache-tomcat
             /usr/local/tomcat/webapps/examples/*
 
 WORKDIR /usr/local/tomcat/webapps/
-COPY --from=pack /usr/local/war/ .
+COPY --from=builder /usr/local/war/ .
 
 EXPOSE 8080
 CMD  /usr/local/tomcat/bin/catalina.sh run
