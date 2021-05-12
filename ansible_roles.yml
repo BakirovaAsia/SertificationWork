@@ -26,6 +26,8 @@
   hosts: build_host
   remote_user: root
   become: yes
+  vars_files: 
+    - vars.yml
 
   roles:
     - docker
