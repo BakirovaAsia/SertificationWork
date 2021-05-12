@@ -1,21 +1,9 @@
 ---
 # tasks file for builder
-- name: Ensure git is install
-  apt:
-    update_cache: yes 
-    name: git
-    state: present 
-
-- name: Ensure Github-repo is clone  
-  git:
-    repo: "{{ my_repo }}"
-    dest: "{{ build_dir_old }}"
-    clone: yes
-
 - name: Ensure Dockerfile is copied
   copy:
     src: Dockerfile
-    dest: /tmp/Dockerfile
+    dest: {{ build_dir }}/Dockerfile
     
 - name: Ensure in DockerHub is login
   docker_login:

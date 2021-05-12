@@ -5,7 +5,7 @@ RUN apt-get update \
     && apt-get install git -y
 
 WORKDIR /usr/local/
-RUN git clone https://github.com/jonbos/CaucusCalculator.git
+RUN git clone https://github.com/BakirovaAsia/CaucusCalculator.git
 WORKDIR /usr/local/CaucusCalculator/
 RUN  mvn package
 
