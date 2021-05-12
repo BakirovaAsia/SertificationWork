@@ -19,7 +19,10 @@ resource "tls_private_key" "my_private_key" {
   rsa_bits  = 4096
 
   provisioner "local-exec" {
-    command = "echo '${tls_private_key.my_private_key.private_key_pem}' > ./keys/sertKey.pem"
+    command = <<EOT
+              echo '${tls_private_key.my_private_key.private_key_pem}' > ./keys/sertKey.pem
+              chmod 600 ./keys/sertKey.pem
+    EOT
   }
 }
 
