@@ -81,12 +81,12 @@ resource "aws_instance" "build-vm" {
   associate_public_ip_address = true
   key_name = "${aws_key_pair.my_generated_key.key_name}"
   subnet_id = tolist(data.aws_subnet_ids.my_subnet_ids.ids)[0]
-  vpc_security_group_ids = ${aws_security_group.my_sec_group.id}
+  vpc_security_group_ids = [aws_security_group.my_sec_group.id]
   
   tags = {
     Name = "build-vm"
   }
-  
+
   depends_on = {
     aws_key_pair.my_generated_key,
   }
@@ -98,7 +98,7 @@ resource "aws_instance" "deploy-vm" {
   associate_public_ip_address = true
   key_name = "${aws_key_pair.my_generated_key.key_name}"
   subnet_id = tolist(data.aws_subnet_ids.my_subnet_ids.ids)[0]
-  vpc_security_group_ids = ${aws_security_group.my_sec_group.id}
+  vpc_security_group_ids = [aws_security_group.my_sec_group.id]
  
   tags = {
     Name = "deploy-vm"
