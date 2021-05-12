@@ -3,7 +3,7 @@
 - name: Ensure Dockerfile is copied
   copy:
     src: Dockerfile
-    dest: {{ build_dir }}/Dockerfile
+    dest: "{{ build_dir }}/Dockerfile"
     
 - name: Ensure in DockerHub is login
   docker_login:
