@@ -9,9 +9,14 @@
 - name: Ensure Github-repo is clone  
   git:
     repo: "{{ my_repo }}"
-    dest: "{{ build_dir }}"
+    dest: "{{ build_dir_old }}"
     clone: yes
 
+- name: Ensure Dockerfile is copied
+  copy:
+    src: Dockerfile
+    dest: /tmp/Dockerfile
+    
 - name: Ensure in DockerHub is login
   docker_login:
     username: "{{ DockerHub_user }}"
@@ -21,7 +26,7 @@
   docker_image:
     name: bakirovaasia/caucuscalculator
     build:
-      path: "{{ build_dir }}/multistage"
+      path: "{{ build_dir }}"
     tag: latest
     push: yes
     source: build

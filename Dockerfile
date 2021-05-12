@@ -11,7 +11,7 @@ RUN  mvn package
 
 WORKDIR /usr/local/war
 
-RUN cp -r /usr/local/CaucusCalculator/target/CaucusCalculator* /usr/local/war
+RUN cp -r /usr/local/CaucusCalculator/target/*.war /usr/local/war/CaucusCalc.war
 
 FROM openjdk:8-jre-alpine
 RUN apk add --no-cache wget
