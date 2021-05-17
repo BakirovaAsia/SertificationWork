@@ -43,7 +43,7 @@ pipeline {
                         --extra-vars "build_vm_ip = $PUBLIC_IP_BUILD \
                                       deploy_vm_ip = $PUBLIC_IP_DEPLOY \
                                       DockerHub_user = $DOCKERHUB_CREDS_USR \
-                                      DockerHub_pass = $DOCKERHUB_CREDS_PSW "'
+                                      DockerHub_pass = $DOCKERHUB_CREDS_PSW " -vvv'
             }
         }
     }
