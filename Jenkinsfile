@@ -2,8 +2,7 @@ pipeline {
     agent {
     dockerfile {
         filename 'Dockerfile.agent'
-        args '-u 0:0'
-        args '-v /var/run/docker.sock:/var/run/docker.sock'
+        args '-u 0:0 -v /var/run/docker.sock:/var/run/docker.sock'
     }
 }
    
@@ -12,9 +11,9 @@ pipeline {
             steps {
                 //sh 'aws configure set aws_access_key_id '
                 //sh 'aws configure set aws_secret_access_key '
-                //sh 'whoami'
-                sh 'sudo aws configure set default.region us-east-2'
-                sh 'sudo aws configure set default.output json'
+                sh 'whoami'
+                sh 'aws configure set default.region us-east-2'
+                sh 'aws configure set default.output json'
 
             }
         }
