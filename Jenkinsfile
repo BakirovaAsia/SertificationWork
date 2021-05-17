@@ -35,8 +35,8 @@ pipeline {
         }
         stage ('Build and deploy on aws instances') {
             environment {
-                PUBLIC_IP_BUILD  = sh(script: 'terraform output public_ip_build', , returnStdout: true).trim()
-                PUBLIC_IP_DEPLOY = sh(script: 'terraform output public_ip_deploy', , returnStdout: true).trim()
+                PUBLIC_IP_BUILD  = sh(script: 'terraform output -raw public_ip_build', , returnStdout: true).trim()
+                PUBLIC_IP_DEPLOY = sh(script: 'terraform output -raw public_ip_deploy', , returnStdout: true).trim()
             }
             steps {
                 sh 'ansible-playbook ansible_roles.yml \
