@@ -3,15 +3,18 @@ pipeline {
     dockerfile {
         filename 'Dockerfile.agent'
         args '-u 0:0 -v /var/run/docker.sock:/var/run/docker.sock'
+        }
     }
-}
+    environment {
+        AWS_ACCESS_KEY_ID     = credentials('aws-secret-key-id')
+        AWS_SECRET_ACCESS_KEY = credentials('aws-secret-access-key')
+    }
    
     stages {
         stage ('Config aws') {
             steps {
-                //sh 'aws configure set aws_access_key_id '
-                //sh 'aws configure set aws_secret_access_key '
-                sh 'whoami'
+                sh 'aws configure set aws_access_key_id $AWS_ACCESS_KEY_I'
+                sh 'aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY'
                 sh 'aws configure set default.region us-east-2'
                 sh 'aws configure set default.output json'
 
