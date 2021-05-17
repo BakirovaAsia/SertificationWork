@@ -17,4 +17,4 @@ RUN wget https://releases.hashicorp.com/terraform/0.15.3/terraform_0.15.3_linux_
     && unzip terraform_0.15.3_linux_amd64.zip \
     && mv terraform /usr/bin/
 
-RUN pip install ansible
+RUN pip3 install ansible
