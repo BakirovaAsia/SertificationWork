@@ -2,7 +2,7 @@ pipeline {
     agent {
     dockerfile {
         filename 'Dockerfile.agent'
-        //args '-u jenkins:sudo'
+        args '-u 0:0'
         args '-v /var/run/docker.sock:/var/run/docker.sock'
     }
 }
