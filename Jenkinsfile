@@ -27,10 +27,9 @@ pipeline {
         }
         stage ('Create aws instances') {
             steps {
-                sh 'terraform init'
-                sh 'terraform plan'
-                //sh 'terraform apply'
-                sh 'echo "Create aws instances"'
+                sh 'terraform init -input=false'
+                sh 'terraform plan -out=tfplan -input=false'
+                sh 'terraform apply -input=false tfplan'
             }
         }
         stage ('Ansible') {
