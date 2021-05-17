@@ -22,7 +22,7 @@ pipeline {
         }
         stage ('Get source') {
             steps {
-                git credentialsId: 'a26eb7f0-751d-412b-a7cf-7a7e4b1b61c2', url: 'https://github.com/BakirovaAsia/SertificationWork.git'
+                git credentialsId: 'GitHubCredits', url: 'https://github.com/BakirovaAsia/SertificationWork.git'
             }
         }
         stage ('Create aws instances') {
