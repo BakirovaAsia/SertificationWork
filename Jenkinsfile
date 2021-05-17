@@ -9,8 +9,8 @@ pipeline {
     stages {
         stage ('Config aws') {
             steps {
-                sh 'aws configure set aws_access_key_id '
-                sh 'aws configure set aws_secret_access_key '
+                //sh 'aws configure set aws_access_key_id '
+                //sh 'aws configure set aws_secret_access_key '
                 sh 'aws configure set default.region us-east-2'
                 sh 'aws configure set default.output json'
 
@@ -23,9 +23,10 @@ pipeline {
         }
         stage ('Create aws instances') {
             steps {
-                sh 'terraform init'
-                sh 'terraform plan'
+                //sh 'terraform init'
+                //sh 'terraform plan'
                 //sh 'terraform apply'
+                sh 'echo "Create aws instances"'
             }
         }
         stage ('Ansible') {
