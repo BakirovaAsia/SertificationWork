@@ -8,6 +8,7 @@ pipeline {
     environment {
         AWS_ACCESS_KEY_ID     = credentials('aws-secret-key-id')
         AWS_SECRET_ACCESS_KEY = credentials('aws-secret-access-key')
+        DOCKERHUB_CREDS = credentials('DockerHubCreds')
     }
    
     stages {
@@ -22,7 +23,7 @@ pipeline {
         }
         stage ('Get source') {
             steps {
-                git credentialsId: 'GitHubCredits', url: 'https://github.com/BakirovaAsia/SertificationWork.git'
+                git credentialsId: 'GitHubCreds', url: 'https://github.com/BakirovaAsia/SertificationWork.git'
             }
         }
         stage ('Create aws instances') {
@@ -32,14 +33,21 @@ pipeline {
                 sh 'terraform apply -input=false tfplan'
             }
         }
-        stage ('Ansible') {
-            steps {
-                sh 'echo "ansible"'
+        stage ('Build and deploy on aws instances') {
+            environment {
+                PUBLIC_IP_BUILD  = sh(script: 'terraform output public_ip_build', , returnStdout).trim()
+                PUBLIC_IP_DEPLOY = sh(script: 'terraform output public_ip_deploy', , returnStdout).trim()
             }
-        }
-        stage ('Deploy image') {
             steps {
-                sh 'echo "deploy"'
+                sh 'echo "$PUBLIC_IP_BUILD"'
+                sh 'echo "$PUBLIC_IP_DEPLOY"'
+
+                sh 'terraform destroy'
+                //sh 'ansible-playbook ansible_roles.yml \
+                //        --extra-vars "build_vm_ip = $PUBLIC_IP_BUILD \
+                //                      deploy_vm_ip = $PUBLIC_IP_DEPLOY \
+                //                      DockerHub_user = $DOCKERHUB_CREDS_USR \
+                //                      DockerHub_pass = $DOCKERHUB_CREDS_PSW '
             }
         }
     }
