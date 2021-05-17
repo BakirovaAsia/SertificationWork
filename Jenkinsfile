@@ -1,8 +1,11 @@
 pipeline {
-    agent any
-    tools {
-        Terraform "terraform0153"
+    agent {
+    dockerfile {
+        filename 'Dockerfile.agent'
+        args '-v /var/run/docker.sock:/var/run/docker.sock'
     }
+}
+   
     stages {
         stage ('Config aws') {
             steps {
