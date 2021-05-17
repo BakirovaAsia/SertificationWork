@@ -4,12 +4,15 @@ ENV TZ=Europe/Moscow
 
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
-RUN apt update && apt install wget awscli python3-pip -y
+RUN apt update && apt install -y wget \
+                                 awscli \
+                                 python3-pip \
+    && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /home/agent/
 
 RUN wget https://releases.hashicorp.com/terraform/0.15.3/terraform_0.15.3_linux_amd64.zip \
     && unzip terraform_0.15.3_linux_amd64.zip \
     && mv terraform /usr/bin/
-    
+
 RUN pip install ansible
