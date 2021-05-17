@@ -2,7 +2,7 @@ pipeline {
     agent {
     dockerfile {
         filename 'Dockerfile.agent'
-        args '-u jenkins:sudo'
+        //args '-u jenkins:sudo'
         args '-v /var/run/docker.sock:/var/run/docker.sock'
     }
 }
@@ -12,7 +12,7 @@ pipeline {
             steps {
                 //sh 'aws configure set aws_access_key_id '
                 //sh 'aws configure set aws_secret_access_key '
-                sh 'whoami'
+                //sh 'whoami'
                 sh 'sudo aws configure set default.region us-east-2'
                 sh 'sudo aws configure set default.output json'
 
