@@ -13,7 +13,7 @@ pipeline {
     stages {
         stage ('Config aws') {
             steps {
-                sh 'aws configure set aws_access_key_id $AWS_ACCESS_KEY_I'
+                sh 'aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID'
                 sh 'aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY'
                 sh 'aws configure set default.region us-east-2'
                 sh 'aws configure set default.output json'
