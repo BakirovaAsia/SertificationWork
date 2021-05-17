@@ -39,15 +39,11 @@ pipeline {
                 PUBLIC_IP_DEPLOY = sh(script: 'terraform output public_ip_deploy', , returnStdout: true).trim()
             }
             steps {
-                sh 'echo "$PUBLIC_IP_BUILD"'
-                sh 'echo "$PUBLIC_IP_DEPLOY"'
-
-                sh 'terraform destroy'
-                //sh 'ansible-playbook ansible_roles.yml \
-                //        --extra-vars "build_vm_ip = $PUBLIC_IP_BUILD \
-                //                      deploy_vm_ip = $PUBLIC_IP_DEPLOY \
-                //                      DockerHub_user = $DOCKERHUB_CREDS_USR \
-                //                      DockerHub_pass = $DOCKERHUB_CREDS_PSW '
+                sh 'ansible-playbook ansible_roles.yml \
+                        --extra-vars "build_vm_ip = $PUBLIC_IP_BUILD \
+                                      deploy_vm_ip = $PUBLIC_IP_DEPLOY \
+                                      DockerHub_user = $DOCKERHUB_CREDS_USR \
+                                      DockerHub_pass = $DOCKERHUB_CREDS_PSW '
             }
         }
     }
