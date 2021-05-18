@@ -11,9 +11,6 @@ terraform {
   }
 }
 
-//ssh-keygen -t rsa -b 2048 -N "" -f ~/.ssh/sertKey.pem
-//ssh-keygen -y -f ~/.ssh/sertKey.pem >> sertKey.pub
-
 resource "tls_private_key" "my_private_key" {
   algorithm = "RSA"
   rsa_bits  = 4096
@@ -119,20 +116,3 @@ output "public_ip_build" {
 output "public_ip_deploy" {
   value = aws_instance.deploy-vm.public_ip
 }
-
-//terraform output public_ip_build
-// terraform output public_ip_deploy
-/*
-resource "null_resource" "ansible" {
-
-  provisioner "local-exec" {
-    command = <<EOT
-              ansible-playbook ansible_roles.yml \
-              --extra-vars "build_vm_ip=${aws_instance.build-vm.public_ip} \
-                            deploy_vm_ip=${aws_instance.deploy-vm.public_ip}\
-                            DockerHub_user= \
-                            DockerHub_pass= "
-    EOT
-  }
-}
-*/
