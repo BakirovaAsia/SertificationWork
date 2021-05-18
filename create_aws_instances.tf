@@ -21,7 +21,7 @@ resource "tls_private_key" "my_private_key" {
   provisioner "local-exec" {
     command = <<EOT
               echo '${tls_private_key.my_private_key.private_key_pem}' > ./keys/sertKey.pem
-              chmod 600 ./keys/sertKey.pem
+              chmod 666 ./keys/sertKey.pem
     EOT
   }
 }
