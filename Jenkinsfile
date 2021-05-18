@@ -41,6 +41,7 @@ pipeline {
             steps {
                 sh 'whoami'
                 sh 'export ANSIBLE_HOST_KEY_CHECKING=False'
+                sh 'printenv $ANSIBLE_HOST_KEY_CHECKING'
                 sh 'ansible-playbook ansible_roles.yml \
                         --extra-vars "build_vm_ip=$PUBLIC_IP_BUILD \
                                       deploy_vm_ip=$PUBLIC_IP_DEPLOY \
