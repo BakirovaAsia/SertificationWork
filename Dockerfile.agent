@@ -19,3 +19,5 @@ WORKDIR /home/agent/
 RUN wget https://releases.hashicorp.com/terraform/0.15.3/terraform_0.15.3_linux_amd64.zip \
     && unzip terraform_0.15.3_linux_amd64.zip \
     && mv terraform /usr/bin/
+
+RUN export ANSIBLE_HOST_KEY_CHECKING=False
