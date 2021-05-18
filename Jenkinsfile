@@ -39,6 +39,7 @@ pipeline {
                 PUBLIC_IP_DEPLOY = sh(script: 'terraform output -raw public_ip_deploy', , returnStdout: true).trim()
             }
             steps {
+                sh 'whoami'
                 sh 'export ANSIBLE_HOST_KEY_CHECKING=False'
                 sh 'ansible-playbook ansible_roles.yml \
                         --extra-vars "build_vm_ip=$PUBLIC_IP_BUILD \
